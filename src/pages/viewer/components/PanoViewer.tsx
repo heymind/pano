@@ -2,7 +2,8 @@ import Taro, { Component, Config } from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import './PanoViewer.scss';
 import { Container } from './Container';
-
+import AlloyFinger from '../../../alloy_finger';
+import debounce from 'lodash/debounce';
 // export interface PanoViewerProps {
 //   pieceRadius: number;
 //   overlapOffset: number;
@@ -32,6 +33,8 @@ export class PanoViewer extends Component<any> {
   cYDeg = 0;
   perspective = 1000;
   moving = false;
+  af: any = null;
+  initScale = 1;
   state = {
     degX: 0,
     degY: 0,
@@ -43,41 +46,91 @@ export class PanoViewer extends Component<any> {
 
   componentWillUnmount() {}
 
-  componentDidShow() {}
+  componentDidShow() {
+    this.af = new AlloyFinger(null, {
+      touchStart: function() {},
+      touchMove: function() {},
+      touchEnd: function() {},
+      touchCancel: function() {},
+      multipointStart: () => {
+        this.initScale = this.state.scale;
+      },
+      multipointEnd: function() {},
+      tap: function() {},
+      doubleTap: function() {},
+      longTap: function() {},
+      singleTap: function() {},
+      rotate: evt => {
+        // console.log(evt.angle);
+      },
+      pinch: evt => {
+        // if (evt.zoom < 1) {
+        const zoom = this.initScale * evt.zoom;
+        if (zoom > 0.7 && zoom < 3) this.setState({ scale: zoom });
+
+        console.log('pinch', evt.zoom);
+      },
+      pressMove: evt => {
+        const dist_x = evt.deltaX * 4,
+          dist_y = evt.deltaY * 4,
+          deg_x = (Math.atan2(dist_y, this.perspective) / Math.PI) * 180,
+          deg_y = (-Math.atan2(dist_x, this.perspective) / Math.PI) * 180;
+
+        this.cXDeg += deg_x;
+        this.cYDeg += deg_y;
+        this.cXDeg = Math.min(90, this.cXDeg);
+        this.cXDeg = Math.max(-90, this.cXDeg);
+
+        this.cYDeg %= 360;
+
+        this.setState({ degX: this.cXDeg, degY: this.cYDeg });
+        //   this.x1 = x2;
+        //   this.y1 = y2;
+        // console.log(evt.deltaX);
+        // console.log(evt.deltaY);
+      },
+      swipe: function(evt) {
+        // console.log('swipe' + evt.direction);
+      }
+    });
+  }
 
   componentDidHide() {}
 
   onTouchStart(e) {
-    this.x1 = e.changedTouches[0].clientX;
-    this.y1 = e.changedTouches[0].clientY;
-    this.moving = true;
+    this.af.start(e);
+    // this.x1 = e.changedTouches[0].clientX;
+    // this.y1 = e.changedTouches[0].clientY;
+    // this.moving = true;
   }
   onTouchEnd(e) {
-    this.moving = false;
+    this.af.end(e);
+    // this.moving = false;
   }
   onTouchMove(e) {
-    console.log(1);
-    if (this.moving) {
-      const x1 = this.x1,
-        y1 = this.y1;
-      const y2 = e.changedTouches[0].clientY;
-      const x2 = e.changedTouches[0].clientX;
-      const dist_x = (x2 - x1) * 4,
-        dist_y = (y2 - y1) * 4,
-        deg_x = (Math.atan2(dist_y, this.perspective) / Math.PI) * 180,
-        deg_y = (-Math.atan2(dist_x, this.perspective) / Math.PI) * 180;
+    this.af.move(e);
+    // console.log(1);
+    // if (this.moving) {
+    //   const x1 = this.x1,
+    //     y1 = this.y1;
+    //   const y2 = e.changedTouches[0].clientY;
+    //   const x2 = e.changedTouches[0].clientX;
+    //   const dist_x = (x2 - x1) * 4,
+    //     dist_y = (y2 - y1) * 4,
+    //     deg_x = (Math.atan2(dist_y, this.perspective) / Math.PI) * 180,
+    //     deg_y = (-Math.atan2(dist_x, this.perspective) / Math.PI) * 180;
 
-      this.cXDeg += deg_x;
-      this.cYDeg += deg_y;
-      this.cXDeg = Math.min(90, this.cXDeg);
-      this.cXDeg = Math.max(-90, this.cXDeg);
+    //   this.cXDeg += deg_x;
+    //   this.cYDeg += deg_y;
+    //   this.cXDeg = Math.min(90, this.cXDeg);
+    //   this.cXDeg = Math.max(-90, this.cXDeg);
 
-      this.cYDeg %= 360;
+    //   this.cYDeg %= 360;
 
-      this.setState({ degX: this.cXDeg, degY: this.cYDeg });
-      this.x1 = x2;
-      this.y1 = y2;
-    }
+    //   this.setState({ degX: this.cXDeg, degY: this.cYDeg });
+    //   this.x1 = x2;
+    //   this.y1 = y2;
+    // }
   }
   render() {
     return (
@@ -89,7 +142,7 @@ export class PanoViewer extends Component<any> {
       >
         <View
           className='pano-cube-box'
-          style={`scale:${this.state.scale} ${this.state.scale};`}
+          style={`transform: scale(${this.state.scale});`}
         >
           <View
             className='pano-cube'

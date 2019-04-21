@@ -84,10 +84,6 @@ export class PanoViewer extends Component<any> {
         this.cYDeg %= 360;
 
         this.setState({ degX: this.cXDeg, degY: this.cYDeg });
-        //   this.x1 = x2;
-        //   this.y1 = y2;
-        // console.log(evt.deltaX);
-        // console.log(evt.deltaY);
       },
       swipe: function(evt) {
         // console.log('swipe' + evt.direction);
@@ -99,38 +95,12 @@ export class PanoViewer extends Component<any> {
 
   onTouchStart(e) {
     this.af.start(e);
-    // this.x1 = e.changedTouches[0].clientX;
-    // this.y1 = e.changedTouches[0].clientY;
-    // this.moving = true;
   }
   onTouchEnd(e) {
     this.af.end(e);
-    // this.moving = false;
   }
   onTouchMove(e) {
     this.af.move(e);
-    // console.log(1);
-    // if (this.moving) {
-    //   const x1 = this.x1,
-    //     y1 = this.y1;
-    //   const y2 = e.changedTouches[0].clientY;
-    //   const x2 = e.changedTouches[0].clientX;
-    //   const dist_x = (x2 - x1) * 4,
-    //     dist_y = (y2 - y1) * 4,
-    //     deg_x = (Math.atan2(dist_y, this.perspective) / Math.PI) * 180,
-    //     deg_y = (-Math.atan2(dist_x, this.perspective) / Math.PI) * 180;
-
-    //   this.cXDeg += deg_x;
-    //   this.cYDeg += deg_y;
-    //   this.cXDeg = Math.min(90, this.cXDeg);
-    //   this.cXDeg = Math.max(-90, this.cXDeg);
-
-    //   this.cYDeg %= 360;
-
-    //   this.setState({ degX: this.cXDeg, degY: this.cYDeg });
-    //   this.x1 = x2;
-    //   this.y1 = y2;
-    // }
   }
   render() {
     return (

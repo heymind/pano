@@ -84,10 +84,13 @@ export default class Index extends Component {
             />
           }
           renderBottom={
-            <Image
-              style='width:100%;height:100%'
-              src='https://s.cdpn.io/19243/down.JPG'
-            />
+            <View style='width:100%;height:100%;position:relative;'>
+              <View style='position:absolute;left:10%;top:10%;height:20%;width:20%;background:red;' />
+              <Image
+                style='width:100%;height:100%'
+                src='https://s.cdpn.io/19243/down.JPG'
+              />
+            </View>
           }
         />
       </View>

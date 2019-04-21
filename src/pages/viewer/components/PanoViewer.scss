@@ -1,0 +1,77 @@
+$piece_radius: 1000px;
+$overlap_offset: 0;
+$viewer_width: 100vw;
+$viewer_height: 100vh;
+$viewer_perspective: $piece_radius / 2;
+$z_offset: $piece_radius / 2 - $overlap_offset;
+.pano-face {
+  position: absolute;
+  top: $piece_radius / 2 - 1;
+  left: $piece_radius / 2 - 1;
+  width: $piece_radius + 2;
+  height: $piece_radius + 2;
+}
+.pano-front {
+  transform: translate3d(0, 0, -$z_offset);
+}
+.pano-left {
+  transform: rotate3d(0, 1, 0, 90deg) translate3d(0, 0, -$z_offset);
+}
+.pano-right {
+  transform: rotate3d(0, 1, 0, -90deg) translate3d(0, 0, -$z_offset);
+}
+.pano-back {
+  transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, -$z_offset);
+}
+.pano-top {
+  transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 0, -$z_offset);
+}
+.pano-bottom {
+  transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -$z_offset);
+}
+
+.pano-cube {
+  transform-style: preserve-3d;
+  transform: rotate3d(1, 1, 0);
+  cursor: move;
+  position: relative;
+  width: $piece_radius * 2;
+  height: $piece_radius * 2;
+  //   overflow: hidden;
+}
+
+.pano-cube-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  perspective: $viewer_perspective;
+  transform-origin: $piece_radius $piece_radius 0;
+  transform-style: preserve-3d;
+  transition: perspective 1.4s ease-in-out;
+  width: $piece_radius * 2;
+  height: $piece_radius * 2;
+  margin-left: calc((#{$viewer_width} - #{$piece_radius} * 2) / 2);
+  margin-top: calc((#{$viewer_height} - #{$piece_radius} * 2) / 2);
+}
+
+:host {
+  width: $viewer_width;
+  height: $viewer_height;
+}
+.pano-viewer {
+  position: absolute;
+  cursor: move;
+  background-size: cover;
+  position: absolute;
+  text-align: center;
+  font-size: $viewer_height;
+  line-height: $viewer_height;
+  left: 50%;
+  top: 50%;
+  margin-left: -1 * $viewer_width / 2;
+  margin-top: -1 * $viewer_height / 2;
+  width: $viewer_width;
+  height: $viewer_height;
+  overflow: hidden;
+}

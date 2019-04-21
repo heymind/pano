@@ -1,0 +1,44 @@
+{
+	"miniprogramRoot": "dist/",
+	"projectname": "panorama",
+	"description": "",
+	"appid": "wx0bd240c64020b4af",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false
+	},
+	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "PanoViewer",
+					"pathName": "pages/viewer/Index",
+					"query": "",
+					"scene": null
+				}
+			]
+		}
+	}
+}
